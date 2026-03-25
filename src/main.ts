@@ -1,7 +1,7 @@
-import inGameTranslator from '@/modules/inGameTranslator'
+import inGameTranslator from '@/modules/inGameTranslator-monkey'
 import translator from '@/modules/translator'
 
-await inGameTranslator.monkey()
+await inGameTranslator()
 
 window.addEventListener('load', async () => {
     await translator()
