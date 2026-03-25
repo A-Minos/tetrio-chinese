@@ -1,0 +1,18 @@
+{
+    "enter room id or url and hit enter...": "输入房间号或网址并按回车键……",
+    "enter replay id, url or username and hit enter...": "输入回放id、网址或用户名并按回车键……",
+    "background URL (use multiple by separating with commas)": "背景图片地址（多张图片用逗号分隔）",
+    "Write something...": "写点什么吧……",
+    "USERNAME": "用户名",
+    "email": "电子邮箱",
+    "email (optional)": "电子邮箱（可选）",
+    "your new password": "请输入你的新密码",
+    "your new password, again": "请再次输入你的新密码",
+    "PASSWORD": "请输入密码",
+    "PASSWORD AGAIN": "请再次输入密码",
+    "please enter the characters above": "请输入上面的文字",
+    "six digits": "六位数",
+    "Ǖ find someone…": "Ǖ 搜索用户名……",
+    "message...": "发消息……",
+    "enter a username to view their profile...": "输入用户名以查看TA的页面"
+}

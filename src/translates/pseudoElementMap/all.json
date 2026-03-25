@@ -1,0 +1,5 @@
+{
+    ".replayid::before": "回放id:",
+    ".rc_switch_knob::before": "关",
+    "input:checked + .rc_switch_knob::before": "开"
+}
