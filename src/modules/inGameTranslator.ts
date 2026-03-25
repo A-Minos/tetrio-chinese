@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import {mergeAll} from "remeda";
+import {isNullish, mergeAll} from "remeda";
 import hun_fnt_base64 from '@/assets/hun/hun.fnt?base64'
 import hun_png_base64 from '@/assets/hun/hun.png?base64'
 import {log} from "@/utils/logging";
@@ -9,9 +9,11 @@ import {unsafeWindow} from "vite-plugin-monkey/dist/client";
 const replacements = {
     'res/font/hun.fnt': 'data:font/fnt;base64,' + hun_fnt_base64,
     'res/font/hun.png': 'data:image/png;base64,' + hun_png_base64,
-    '/js/tetrio.js': async () => {
-        const response = await fetch("/js/tetrio.js");
-        const raw = await response.text();
+    '/js/tetrio.js': async (src: string | null = null) => {
+        if (isNullish(src)) {
+            const response = await fetch("/js/tetrio.js");
+            src = await response.text();
+        }
 
         const zenithPromptMap = mergeAll(
             Object.values(
@@ -22,7 +24,7 @@ const replacements = {
             )
         )
 
-        return raw.replace(/zenith.ns.zenithprompts(.*?)update\(e\){/gi, `zenith.ns.zenithprompts$1update(e) { const _replaceTexts = ${JSON.stringify(zenithPromptMap)}; e = e.map(item => { if (_replaceTexts[item.label] !== undefined) { item.label = _replaceTexts[item.label]; } return item; });`,);
+        return src.replace(/zenith.ns.zenithprompts(.*?)update\(e\){/gi, `zenith.ns.zenithprompts$1update(e) { const _replaceTexts = ${JSON.stringify(zenithPromptMap)}; e = e.map(item => { if (_replaceTexts[item.label] !== undefined) { item.label = _replaceTexts[item.label]; } return item; });`,);
     }
 }
 
@@ -140,7 +142,7 @@ export default {
             enabledFor: async () => {
                 return true;
             },
-            onStop: async (_storage, url) => {
+            onStop: async (_storage, url, _src, callback) => {
                 if (url.endsWith('hun.fnt')) {
                     callback({
                         type: 'font/fnt',
@@ -167,10 +169,10 @@ export default {
             enabledFor: async () => {
                 return true;
             },
-            onStop: async () => {
+            onStop: async (_storage, _url, src, callback) => {
                 callback({
                     type: 'text/javascript',
-                    data: await replacements['/js/tetrio.js'](),
+                    data: await replacements['/js/tetrio.js'](src),
                     encoding: 'text'
                 });
             }
