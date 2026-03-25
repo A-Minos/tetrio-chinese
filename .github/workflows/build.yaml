@@ -14,4 +14,6 @@ jobs:
                     git checkout -B release/rolling
                     git add -A
                     git commit -m ":bookmark: 滚动更新" --allow-empty
+                    git config --global user.name "${{ github.actor }}"
+                    git config --global user.email "${{ github.actor }}@users.noreply.github.com"
                     git push origin release/rolling --force
