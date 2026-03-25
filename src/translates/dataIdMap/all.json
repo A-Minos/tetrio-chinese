@@ -1,9 +1,3 @@
 {
-    "offline": [
-        [
-            "INVISIBLE",
-            "g"
-        ],
-        "隐身"
-    ]
+    "offline": [["INVISIBLE", "g"], "隐身"]
 }

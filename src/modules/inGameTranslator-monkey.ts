@@ -1,10 +1,10 @@
 // @ts-nocheck
 
-import {log} from "@/utils/logging";
-import {replacements} from "@/modules/inGameTranslator";
+import { log } from "@/utils/logging";
+import { replacements } from "@/modules/inGameTranslator";
 
 export default async () => {
-    const {open: XMLHttpRequestOpen, send: XMLHttpRequestSend} = $.unsafeWindow.XMLHttpRequest.prototype;
+    const { open: XMLHttpRequestOpen, send: XMLHttpRequestSend } = $.unsafeWindow.XMLHttpRequest.prototype;
 
     const until = async (checker) => {
         while (true) {
@@ -22,7 +22,7 @@ export default async () => {
         }
     };
 
-    const _XMLHttpRequest = unsafeWindow.XMLHttpRequest
+    const _XMLHttpRequest = unsafeWindow.XMLHttpRequest;
 
     unsafeWindow.XMLHttpRequest.prototype.send = function (...args) {
         log("xhr.open", this, args);
@@ -110,4 +110,4 @@ export default async () => {
             return instance;
         },
     });
-}
+};

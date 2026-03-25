@@ -12,5 +12,5 @@ export default () => {
 
             return `export default '${base64}';`;
         },
-    }
-}
+    };
+};

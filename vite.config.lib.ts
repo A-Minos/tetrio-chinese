@@ -1,32 +1,33 @@
-import {defineConfig} from 'vite'
-import {resolve} from "node:path";
+import { defineConfig } from "vite";
+import { resolve } from "node:path";
 import Base64Loader from "./plugins/base64-loader.ts";
 
-export default defineConfig(env => {
+export default defineConfig((env) => {
     return {
-        base: './',
+        base: "./",
         build: {
             emptyOutDir: false,
             assetsInlineLimit: () => true,
             rolldownOptions: {
-                input: resolve(__dirname, `src/electron-loaders/${env.mode.startsWith('lib:') ? env.mode.split('lib:')[1] : null}.ts`),
+                input: resolve(
+                    __dirname,
+                    `src/electron-loaders/${env.mode.startsWith("lib:") ? env.mode.split("lib:")[1] : null}.ts`,
+                ),
                 output: [
                     {
-                        format: 'module',
-                        name: 'TetrioPlusPlusCustomize',
-                        entryFileNames: 'electron-loaders/[name].js',
-                        codeSplitting: false
-                    }
-                ]
-            }
+                        format: "module",
+                        name: "TetrioPlusPlusCustomize",
+                        entryFileNames: "electron-loaders/[name].js",
+                        codeSplitting: false,
+                    },
+                ],
+            },
         },
         resolve: {
             alias: {
-                '@': resolve(__dirname, 'src'),
-            }
+                "@": resolve(__dirname, "src"),
+            },
         },
-        plugins: [
-            Base64Loader(),
-        ]
-    }
-})
+        plugins: [Base64Loader()],
+    };
+});

@@ -1,3 +1,3 @@
 import translator from "@/modules/translator";
 
-await translator()
+await translator();

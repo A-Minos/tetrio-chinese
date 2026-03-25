@@ -3,15 +3,8 @@
         "target": "ES2023",
         "useDefineForClassFields": true,
         "module": "ESNext",
-        "lib": [
-            "ES2023",
-            "DOM",
-            "DOM.Iterable"
-        ],
-        "types": [
-            "vite/client",
-            "vite-plugin-monkey/client"
-        ],
+        "lib": ["ES2023", "DOM", "DOM.Iterable"],
+        "types": ["vite/client", "vite-plugin-monkey/client"],
         "skipLibCheck": true,
         /* Bundler mode */
         "moduleResolution": "bundler",
@@ -27,15 +20,8 @@
         "noFallthroughCasesInSwitch": true,
         "noUncheckedSideEffectImports": true,
         "paths": {
-            "@/*": [
-                "./src/*"
-            ]
+            "@/*": ["./src/*"]
         }
     },
-    "include": [
-        "src",
-        "vite.config.ts",
-        "vite.config.lib.ts",
-        "plugins/base64-loader.ts"
-    ]
+    "include": ["src", "vite.config.ts", "vite.config.lib.ts", "plugins/base64-loader.ts"]
 }

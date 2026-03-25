@@ -1,62 +1,61 @@
 // @ts-nocheck
 
-import {mergeAll} from "remeda";
+import { mergeAll } from "remeda";
 
 export default async () => {
     const textMap = mergeAll(
         Object.values(
-            import.meta.glob<[]>('@/translates/textMap/*.json', {
-                import: 'default',
-                eager: true
-            })
-        )
-    )
+            import.meta.glob<[]>("@/translates/textMap/*.json", {
+                import: "default",
+                eager: true,
+            }),
+        ),
+    );
 
     const tooltipMap = mergeAll(
         Object.values(
-            import.meta.glob<[]>('@/translates/tooltipMap/*.json', {
-                import: 'default',
-                eager: true
-            })
-        )
-    )
+            import.meta.glob<[]>("@/translates/tooltipMap/*.json", {
+                import: "default",
+                eager: true,
+            }),
+        ),
+    );
 
     const specialTextMap = mergeAll(
         Object.values(
-            import.meta.glob<[]>('@/translates/specialTextMap/*.json', {
-                import: 'default',
-                eager: true
-            })
-        )
-    )
-
+            import.meta.glob<[]>("@/translates/specialTextMap/*.json", {
+                import: "default",
+                eager: true,
+            }),
+        ),
+    );
 
     const placeholderMap = mergeAll(
         Object.values(
-            import.meta.glob<[]>('@/translates/placeholderMap/*.json', {
-                import: 'default',
-                eager: true
-            })
-        )
-    )
+            import.meta.glob<[]>("@/translates/placeholderMap/*.json", {
+                import: "default",
+                eager: true,
+            }),
+        ),
+    );
 
     const pseudoElementMap = mergeAll(
         Object.values(
-            import.meta.glob<[]>('@/translates/pseudoElementMap/*.json', {
-                import: 'default',
-                eager: true
-            })
-        )
-    )
+            import.meta.glob<[]>("@/translates/pseudoElementMap/*.json", {
+                import: "default",
+                eager: true,
+            }),
+        ),
+    );
 
     const dataIdMap = mergeAll(
         Object.values(
-            import.meta.glob<[]>('@/translates/dataIdMap/*.json', {
-                import: 'default',
-                eager: true
-            })
-        )
-    )
+            import.meta.glob<[]>("@/translates/dataIdMap/*.json", {
+                import: "default",
+                eager: true,
+            }),
+        ),
+    );
 
     const toLowerCaseKeys = (obj) => {
         const result = {};
@@ -78,19 +77,33 @@ export default async () => {
             return (
                 currentNode.nodeType === Node.ELEMENT_NODE &&
                 (currentNode.getAttribute("data-uid") === "5f4ca7f5fdcc602e78a65bba" ||
-                    ["breadcrumbs", "dirtyflag_gfx", "dirtyflag_net", "dirtyflag_state", "dirtyflag_client", "dirtyflag_gl"].includes(currentNode.getAttribute("id")) ||
-                    ["user", "leagueplayer_name", "primary", "uniflex-item"].some((className) => currentNode.classList.contains(className)) ||
+                    [
+                        "breadcrumbs",
+                        "dirtyflag_gfx",
+                        "dirtyflag_net",
+                        "dirtyflag_state",
+                        "dirtyflag_client",
+                        "dirtyflag_gl",
+                    ].includes(currentNode.getAttribute("id")) ||
+                    ["user", "leagueplayer_name", "primary", "uniflex-item"].some((className) =>
+                        currentNode.classList.contains(className),
+                    ) ||
                     currentNode.className === "chat_message ig_chat_message" ||
                     currentNode.className === "chat_message dm_chat_message" ||
                     currentNode.className === "chat_message ig_chat_message roomownerchat" ||
-                    ["supporterchat", "supporterchat_t1", "supporterchat_t2", "supporterchat_t3", "supporterchat_t4"].some((className) => currentNode.classList.contains(className)) ||
+                    [
+                        "supporterchat",
+                        "supporterchat_t1",
+                        "supporterchat_t2",
+                        "supporterchat_t3",
+                        "supporterchat_t4",
+                    ].some((className) => currentNode.classList.contains(className)) ||
                     currentNode.classList.contains("user-tooltip") ||
                     currentNode === document.querySelector(".tetra_modal h2") ||
                     currentNode.getAttribute("data-username") ||
-                    currentNode.closest('.room_config_item.room_config_spinner.flex-item.ns'))
+                    currentNode.closest(".room_config_item.room_config_spinner.flex-item.ns"))
             );
         }
-
 
         let currentNode = node;
         while (currentNode) {
@@ -100,7 +113,7 @@ export default async () => {
         return false;
     }
 
-// 查找最近的祖先 data-id
+    // 查找最近的祖先 data-id
     function findNearestDataId(node) {
         let current = node.parentNode;
         while (current && current !== document) {
@@ -113,16 +126,16 @@ export default async () => {
         return null;
     }
 
-// 应用 data-id 的部分替换
+    // 应用 data-id 的部分替换
     function applyDataIdReplaceToText(text, dataId) {
         const rule = dataIdMap[dataId];
-        if (!rule) return {text, replaced: false};
+        if (!rule) return { text, replaced: false };
         const [pattern, replacement] = rule;
         const newText = text.replace(pattern, replacement);
-        return {text: newText, replaced: newText !== text};
+        return { text: newText, replaced: newText !== text };
     }
 
-// 将特殊正则映射应用到纯文本
+    // 将特殊正则映射应用到纯文本
     function applySpecialMaps(text) {
         let out = text;
         for (let [key, value] of Object.entries(specialTextMap)) {
@@ -133,7 +146,7 @@ export default async () => {
         return out;
     }
 
-// 替换文本节点内容
+    // 替换文本节点内容
     function replaceText(node) {
         if (node.nodeType === Node.ELEMENT_NODE) {
             // 占位符替换
@@ -163,8 +176,8 @@ export default async () => {
                         }
                     }
                 }
-            } catch (e) {
-            }
+                // oxlint-disable-next-line no-unused-vars
+            } catch (e) {}
         } else if (node.nodeType === Node.TEXT_NODE) {
             let text = node.nodeValue.trim();
             if (!text) return;
@@ -172,7 +185,7 @@ export default async () => {
             // data-id 替换（只替换匹配部分）
             const nearestDataId = findNearestDataId(node);
             if (nearestDataId) {
-                const {text: newText} = applyDataIdReplaceToText(text, nearestDataId);
+                const { text: newText } = applyDataIdReplaceToText(text, nearestDataId);
                 text = newText;
             }
 
@@ -193,7 +206,7 @@ export default async () => {
         }
     }
 
-// 替换悬停文本
+    // 替换悬停文本
     function replaceTooltips(event) {
         const tooltip = event.target;
         let title = tooltip.getAttribute("title");
@@ -208,7 +221,7 @@ export default async () => {
         }
     }
 
-// MutationObserver 处理新增节点
+    // MutationObserver 处理新增节点
     function handleMutation(mutationsList) {
         for (let mutation of mutationsList) {
             if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
@@ -219,10 +232,10 @@ export default async () => {
         }
     }
 
-// 初始文本替换
+    // 初始文本替换
     replaceText(document.body);
 
-// 悬停文本事件
+    // 悬停文本事件
     document.addEventListener(
         "mouseenter",
         (event) => {
@@ -234,11 +247,11 @@ export default async () => {
         true,
     );
 
-// MutationObserver
+    // MutationObserver
     const observer = new MutationObserver(handleMutation);
-    observer.observe(document.body, {childList: true, subtree: true});
+    observer.observe(document.body, { childList: true, subtree: true });
 
-// ===== 好友列表专用优化 =====
+    // ===== 好友列表专用优化 =====
     let tabKeyTimer = null;
     let isObserverActive = true;
     document.addEventListener("keydown", (event) => {
@@ -250,10 +263,10 @@ export default async () => {
             }
             tabKeyTimer = setTimeout(() => {
                 if (!isObserverActive) {
-                    observer.observe(document.body, {childList: true, subtree: true});
+                    observer.observe(document.body, { childList: true, subtree: true });
                     isObserverActive = true;
                 }
             }, 500);
         }
     });
-}
+};
