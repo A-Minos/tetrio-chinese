@@ -12,10 +12,10 @@ export default defineConfig(env => {
                 input: resolve(__dirname, `src/electron-loaders/${env.mode.startsWith('lib:') ? env.mode.split('lib:')[1] : null}.ts`),
                 output: [
                     {
-                        format: 'iife',
+                        format: 'module',
                         name: 'TetrioPlusPlusCustomize',
                         entryFileNames: 'electron-loaders/[name].js',
-                        codeSplitting: true
+                        codeSplitting: false
                     }
                 ]
             }
