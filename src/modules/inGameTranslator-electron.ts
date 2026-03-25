@@ -3,9 +3,12 @@
 import { replacements } from "@/modules/inGameTranslator";
 
 export default async () => {
+    const pluginStateStorageKey = "tetrio_plus_plus_customize-chinese_translate-state";
+
     createRewriteFilter("tetr.io chinese font replacer", "https://tetr.io/res/font/*", {
-        enabledFor: async () => {
-            return true;
+        enabledFor: async (storage) => {
+            let res = await storage.get(pluginStateStorageKey);
+            return res[pluginStateStorageKey];
         },
         onStop: async (_storage, url, _src, callback) => {
             if (url.endsWith("hun.fnt")) {
@@ -31,8 +34,9 @@ export default async () => {
     });
 
     createRewriteFilter("tetr.io chinese script replace", "https://tetr.io/js/tetrio.js*", {
-        enabledFor: async () => {
-            return true;
+        enabledFor: async (storage) => {
+            let res = await storage.get(pluginStateStorageKey);
+            return res[pluginStateStorageKey];
         },
         onStop: async (_storage, _url, src, callback) => {
             callback({
