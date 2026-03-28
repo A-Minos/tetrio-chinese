@@ -1,3 +1,5 @@
 import translator from "@/modules/translator";
 
-await translator();
+(async () => {
+    await translator();
+})();

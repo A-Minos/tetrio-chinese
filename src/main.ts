@@ -1,14 +1,16 @@
 import inGameTranslator from "@/modules/inGameTranslator-monkey";
 import translator from "@/modules/translator";
 
-await inGameTranslator();
+(async () => {
+    window.addEventListener(
+        "load",
+        async () => {
+            await translator();
+        },
+        {
+            once: true,
+        },
+    );
 
-window.addEventListener(
-    "load",
-    async () => {
-        await translator();
-    },
-    {
-        once: true,
-    },
-);
+    await inGameTranslator();
+})();

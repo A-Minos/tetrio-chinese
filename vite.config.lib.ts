@@ -15,7 +15,7 @@ export default defineConfig((env) => {
                 ),
                 output: [
                     {
-                        format: "module",
+                        format: "iife",
                         name: "TetrioPlusPlusCustomize",
                         entryFileNames: "electron-loaders/[name].js",
                         codeSplitting: false,
