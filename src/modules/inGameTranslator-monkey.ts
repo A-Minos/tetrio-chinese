@@ -2,7 +2,7 @@
 
 import { log } from "@/utils/logging";
 import { replacements } from "@/modules/inGameTranslator";
-import { processPlacement } from "@/utils/replacement.ts";
+import { processPlacement } from "@/utils/replacement";
 import { isArray, isNonNullish } from "remeda";
 import { GM_getValue, GM_setValue, unsafeWindow } from "$";
 

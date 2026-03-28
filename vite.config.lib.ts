@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import { resolve } from "node:path";
-import Base64Loader from "./plugins/base64-loader.ts";
+import Base64Loader from "./plugins/base64-loader";
 
 export default defineConfig((env) => {
     return {

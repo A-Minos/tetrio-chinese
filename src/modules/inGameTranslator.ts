@@ -2,8 +2,9 @@
 
 import { isNonNullish, isNullish, mergeAll, unique } from "remeda";
 import init, { build_font, import_bmfont, merge_fonts } from "@a-minos/fontbake-wasm";
-import wasm from "@a-minos/fontbake-wasm/fontbake_wasm_bg.wasm?url";
 import font from "@/assets/zpix.ttf?url";
+
+const _URL = URL;
 
 export const replacements = {
     ...(() => {
@@ -19,7 +20,7 @@ export const replacements = {
             resolvePng = resolve;
         });
 
-        const URL = new Proxy(window.URL, {
+        const URL = new Proxy(_URL, {
             construct(target: any, argArray: any[], newTarget: Function): object {
                 if (argArray[1] === "undefined") {
                     argArray[1] = undefined;
@@ -74,7 +75,7 @@ export const replacements = {
                     }
                 }
 
-                await init(wasm);
+                await init();
 
                 let fnt;
                 let png;

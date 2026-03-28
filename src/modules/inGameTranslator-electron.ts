@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import { replacements } from "@/modules/inGameTranslator";
-import { processPlacement } from "@/utils/replacement.ts";
+import { processPlacement } from "@/utils/replacement";
 
 export default async () => {
     const pluginStateStorageKey = "tetrio_plus_plus_customize-chinese_translate-state";
