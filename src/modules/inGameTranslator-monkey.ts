@@ -110,7 +110,7 @@ export default async () => {
                 log("Image.src:changed", src);
 
                 if (isNonNullish(replacements[src])) {
-                    const processed = await processPlacement(replacements[urlWithoutQuery], [{ storage }]);
+                    const processed = await processPlacement(replacements[src], [{ storage }]);
 
                     if (isNonNullish(processed)) {
                         log("Image:hooked", src, processed);

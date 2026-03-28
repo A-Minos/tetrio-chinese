@@ -2,6 +2,7 @@
 
 import { isNonNullish, isNullish, mergeAll, unique } from "remeda";
 import init, { build_font, import_bmfont, merge_fonts } from "@a-minos/fontbake-wasm";
+import wasmBase64 from "@a-minos/fontbake-wasm/fontbake_wasm_bg.wasm?base64";
 import font from "@/assets/zpix.ttf?url";
 
 export const replacements = {
@@ -58,7 +59,7 @@ export const replacements = {
                     }
                 }
 
-                await init();
+                await init(`data:application/wasm;base64,${wasmBase64}`);
 
                 const fnt = await (await fetch("https://tetr.io/res/font/hun.fnt")).text();
                 const png = await (await fetch("https://tetr.io/res/font/hun.png")).bytes();
@@ -121,10 +122,14 @@ export const replacements = {
                     resolvePng(URL.createObjectURL(mergedPng));
                 }
 
-                return `data:font/fnt;base64,${mergedFnt}`;
+                return URL.createObjectURL(
+                    new Blob([mergedFnt], {
+                        type: "application/x-font-fnt",
+                    }),
+                );
             },
             "res/font/hun.png": async () => {
-                return `data:image/png;base64,${await png}`;
+                return await png;
             },
         };
     })(),
