@@ -66,7 +66,7 @@ export const replacements = {
                 const imported = import_bmfont(fnt, JSON.stringify([[...png]]), "tetrio chinese");
 
                 const build = build_font(
-                    `font.name=HUN\nfont.size=52\nfont.bold=false\nfont.italic=false\nfont.gamma=1.8\nfont.mono=false\npad.top=4\npad.right=4\npad.bottom=4\npad.left=4\npad.advance.x=-8\npad.advance.y=-8\nglyph.native.rendering=false\nglyph.page.width=1024\nglyph.page.height=1024\nglyph.text=${e.data.chars}\nrender_type=0\neffect.class=com.badlogic.gdx.tools.hiero.unicodefont.effects.DistanceFieldEffect\neffect.Color=ffffff\neffect.Scale=32\neffect.Spread=3.5`,
+                    `font.name=HUN\nfont.size=52\nfont.bold=false\nfont.italic=false\nfont.gamma=1.8\nfont.mono=false\npad.top=4\npad.right=4\npad.bottom=4\npad.left=4\npad.advance.x=-8\npad.advance.y=-8\nglyph.native.rendering=false\nglyph.page.width=1024\nglyph.page.height=1024\nglyph.text=${chars}\nrender_type=0\neffect.class=com.badlogic.gdx.tools.hiero.unicodefont.effects.DistanceFieldEffect\neffect.Color=ffffff\neffect.Scale=32\neffect.Spread=3.5`,
                     [...(await (await fetch(font)).bytes())],
                     JSON.stringify([]),
                 );
