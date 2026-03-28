@@ -1,6 +1,7 @@
 // @ts-nocheck
 
 import { replacements } from "@/modules/inGameTranslator";
+import { processPlacement } from "@/utils/replacement.ts";
 
 export default async () => {
     const pluginStateStorageKey = "tetrio_plus_plus_customize-chinese_translate-state";
@@ -10,11 +11,11 @@ export default async () => {
             let res = await storage.get(pluginStateStorageKey);
             return res[pluginStateStorageKey];
         },
-        onStop: async (_storage, url, _src, callback) => {
+        onStop: async (storage, url, _src, callback) => {
             if (url.endsWith("hun.fnt")) {
                 callback({
                     type: "font/fnt",
-                    data: replacements["res/font/hun.fnt"],
+                    data: await processPlacement(replacements["res/font/hun.fnt"], [{ storage }]),
                     encoding: "base64-data-url",
                 });
 
@@ -24,7 +25,7 @@ export default async () => {
             if (url.endsWith("hun.png")) {
                 callback({
                     type: "image/png",
-                    data: replacements["res/font/hun.png"],
+                    data: await processPlacement(replacements["res/font/hun.png"], [{ storage }]),
                     encoding: "base64-data-url",
                 });
 
@@ -38,10 +39,10 @@ export default async () => {
             let res = await storage.get(pluginStateStorageKey);
             return res[pluginStateStorageKey];
         },
-        onStop: async (_storage, _url, src, callback) => {
+        onStop: async (storage, _url, src, callback) => {
             callback({
                 type: "text/javascript",
-                data: await replacements["/js/tetrio.js"](src),
+                data: await processPlacement(replacements["/js/tetrio.js"], [{ src, storage }]),
                 encoding: "text",
             });
         },

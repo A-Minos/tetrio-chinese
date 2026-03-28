@@ -2,9 +2,31 @@
 
 import { log } from "@/utils/logging";
 import { replacements } from "@/modules/inGameTranslator";
+import { processPlacement } from "@/utils/replacement.ts";
+import { isArray, isNonNullish } from "remeda";
+import { GM_getValue, GM_setValue, unsafeWindow } from "$";
 
 export default async () => {
-    const { open: XMLHttpRequestOpen, send: XMLHttpRequestSend } = $.unsafeWindow.XMLHttpRequest.prototype;
+    const storage = {
+        get(names) {
+            if (!isArray(names)) {
+                names = [names];
+            }
+
+            return Object.fromEntries(
+                names.map((name) => {
+                    return [name, GM_getValue(name)];
+                }),
+            );
+        },
+        set(map) {
+            Object.entries(map).forEach(([key, value]) => {
+                GM_setValue(key, value);
+            });
+        },
+    };
+
+    const { open: XMLHttpRequestOpen, send: XMLHttpRequestSend } = unsafeWindow.XMLHttpRequest.prototype;
 
     const until = async (checker) => {
         while (true) {
@@ -22,8 +44,6 @@ export default async () => {
         }
     };
 
-    const _XMLHttpRequest = unsafeWindow.XMLHttpRequest;
-
     unsafeWindow.XMLHttpRequest.prototype.send = function (...args) {
         log("xhr.open", this, args);
 
@@ -33,31 +53,19 @@ export default async () => {
             this.onload = async (...args) => {
                 const urlWithoutQuery = this._url.split("?", 2)[0];
 
-                if (urlWithoutQuery !== undefined) {
-                    let raw = null;
+                if (isNonNullish(urlWithoutQuery) && isNonNullish(replacements[urlWithoutQuery])) {
+                    const processed = await processPlacement(replacements[urlWithoutQuery], [{ storage }]);
 
-                    if (replacements[urlWithoutQuery] !== undefined) {
-                        if (typeof replacements[urlWithoutQuery] === "string") {
-                            raw = await fetch(replacements[urlWithoutQuery]).then(async (response) => {
-                                return await response.text();
-                            });
-                        }
+                    log("xhr:hooked", this, urlWithoutQuery, replacements[urlWithoutQuery], processed);
 
-                        if (typeof replacements[urlWithoutQuery] === "function") {
-                            raw = await replacements[urlWithoutQuery]();
-                        }
-                    }
-
-                    log("xhr:hooked", this, urlWithoutQuery, replacements[urlWithoutQuery], raw);
-
-                    if (raw !== null) {
+                    if (isNonNullish(processed)) {
                         Object.defineProperty(this, "response", {
-                            value: raw,
+                            value: processed,
                             writable: false,
                         });
 
                         Object.defineProperty(this, "responseText", {
-                            value: raw,
+                            value: processed,
                             writable: false,
                         });
                     }
@@ -79,8 +87,8 @@ export default async () => {
 
         const urlWithoutQuery = this._url.split("?", 2)[0];
 
-        if (urlWithoutQuery !== undefined) {
-            if (replacements[urlWithoutQuery] !== undefined) {
+        if (isNonNullish(urlWithoutQuery)) {
+            if (isNonNullish(replacements[urlWithoutQuery])) {
                 this._hooked = true;
                 args[1] = "data:application/octet-stream;base64,IldPU0hJWkhBWkhBMTIwIg==";
                 log("xhr.open:hooked", ...args);
@@ -96,14 +104,18 @@ export default async () => {
             log("new Image", target, args, newTarget, instance);
 
             until(async () => {
-                return instance.getAttribute("src") !== null;
+                return isNonNullish(instance.getAttribute("src"));
             }).then(async () => {
                 const src = instance.getAttribute("src");
                 log("Image.src:changed", src);
 
-                if (replacements[src] !== undefined) {
-                    log("Image:hooked", src, replacements[src]);
-                    instance.setAttribute("src", replacements[src]);
+                if (isNonNullish(replacements[src])) {
+                    const processed = await processPlacement(replacements[urlWithoutQuery], [{ storage }]);
+
+                    if (isNonNullish(processed)) {
+                        log("Image:hooked", src, processed);
+                        instance.setAttribute("src", processed);
+                    }
                 }
             });
 
