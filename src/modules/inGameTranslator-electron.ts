@@ -11,11 +11,11 @@ export default async () => {
             let res = await storage.get(pluginStateStorageKey);
             return res[pluginStateStorageKey];
         },
-        onStop: async (storage, url, _src, callback) => {
+        onStop: async (storage, url, src, callback) => {
             if (url.endsWith("hun.fnt")) {
                 callback({
                     type: "font/fnt",
-                    data: await processPlacement(replacements["res/font/hun.fnt"], [{ storage }]),
+                    data: await processPlacement(replacements["res/font/hun.fnt"], [{ src, storage }]),
                     encoding: "base64-data-url",
                 });
 
@@ -25,7 +25,7 @@ export default async () => {
             if (url.endsWith("hun.png")) {
                 callback({
                     type: "image/png",
-                    data: await processPlacement(replacements["res/font/hun.png"], [{ storage }]),
+                    data: await processPlacement(replacements["res/font/hun.png"], [{ src, storage }]),
                     encoding: "base64-data-url",
                 });
 

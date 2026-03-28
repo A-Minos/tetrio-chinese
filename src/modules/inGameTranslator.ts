@@ -8,8 +8,13 @@ import font from "@/assets/zpix.ttf?url";
 export const replacements = {
     ...(() => {
         const cacheStorageKey = "chineseCache";
-        let resolvePng = null;
 
+        let resolveReceivePng = null;
+        const receivePng = new Promise<string>((resolve) => {
+            resolveReceivePng = resolve;
+        });
+
+        let resolvePng = null;
         const png = new Promise<string>((resolve) => {
             resolvePng = resolve;
         });
@@ -25,7 +30,7 @@ export const replacements = {
         });
 
         return {
-            "res/font/hun.fnt": async ({ storage }) => {
+            "res/font/hun.fnt": async ({ src, storage }) => {
                 const chars = unique(
                     Object.values(
                         mergeAll(
@@ -71,8 +76,16 @@ export const replacements = {
 
                 await init(wasm);
 
-                const fnt = await (await fetch("https://tetr.io/res/font/hun.fnt")).text();
-                const png = await (await fetch("https://tetr.io/res/font/hun.png")).bytes();
+                let fnt;
+                let png;
+
+                if (isNonNullish(src)) {
+                    fnt = src;
+                    png = Buffer.from(await receivePng, "utf-8");
+                } else {
+                    fnt = await (await fetch("https://tetr.io/res/font/hun.fnt")).text();
+                    png = await (await fetch("https://tetr.io/res/font/hun.png")).bytes();
+                }
 
                 const imported = import_bmfont(fnt, JSON.stringify([[...png]]), "tetrio chinese");
 
@@ -134,7 +147,11 @@ export const replacements = {
 
                 return mergedFnt;
             },
-            "res/font/hun.png": async () => {
+            "res/font/hun.png": async ({ src }) => {
+                if (isNonNullish(src)) {
+                    resolveReceivePng(src);
+                }
+
                 return await png;
             },
         };
