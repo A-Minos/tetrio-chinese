@@ -5,10 +5,15 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
+        permissions:
+            packages: read
+            contents: read
         steps:
             - uses: actions/checkout@v6
             - uses: oven-sh/setup-bun@v2
             - run: bun install
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - run: bun run build
             - uses: JamesIves/github-pages-deploy-action@v4
               with:
