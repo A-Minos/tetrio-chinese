@@ -2,7 +2,7 @@
 
 import { isNonNullish, isNullish, mergeAll, unique } from "remeda";
 import init, { build_font, import_bmfont, merge_fonts } from "@a-minos/fontbake-wasm";
-import wasmBase64 from "@a-minos/fontbake-wasm/fontbake_wasm_bg.wasm?base64";
+import wasm from "@a-minos/fontbake-wasm/fontbake_wasm_bg.wasm?url";
 import font from "@/assets/zpix.ttf?url";
 
 export const replacements = {
@@ -12,6 +12,16 @@ export const replacements = {
 
         const png = new Promise<string>((resolve) => {
             resolvePng = resolve;
+        });
+
+        const URL = new Proxy(window.URL, {
+            construct(target: any, argArray: any[], newTarget: Function): object {
+                if (argArray[1] === "undefined") {
+                    argArray[1] = undefined;
+                }
+
+                return Reflect.construct(target, argArray, newTarget);
+            },
         });
 
         return {
@@ -59,7 +69,7 @@ export const replacements = {
                     }
                 }
 
-                await init(`data:application/wasm;base64,${wasmBase64}`);
+                await init(wasm);
 
                 const fnt = await (await fetch("https://tetr.io/res/font/hun.fnt")).text();
                 const png = await (await fetch("https://tetr.io/res/font/hun.png")).bytes();
@@ -122,11 +132,7 @@ export const replacements = {
                     resolvePng(URL.createObjectURL(mergedPng));
                 }
 
-                return URL.createObjectURL(
-                    new Blob([mergedFnt], {
-                        type: "application/x-font-fnt",
-                    }),
-                );
+                return mergedFnt;
             },
             "res/font/hun.png": async () => {
                 return await png;
