@@ -35,7 +35,7 @@ export const replacements = {
                 log("ingame", "字符集", chars);
 
                 if (isNonNullish(storage)) {
-                    const res = await storage.get(cacheStorageKey);
+                    const res = await storage.get([cacheStorageKey, "font_hun_fnt", "font_hun_png"]);
 
                     const decode = async (data) => {
                         if (typeof Buffer !== "undefined") {
@@ -54,14 +54,28 @@ export const replacements = {
 
                     const chineseCache = res[cacheStorageKey];
 
-                    if (isNonNullish(chineseCache) && chineseCache.chars === chars) {
-                        log("ingame", "返回缓存");
+                    if (isNonNullish(chineseCache) && customNoChange) {
+                        const shouldUseCache = () => {
+                            if (isNonNullish(res.font_hun_fnt) && chineseCache.custom_fnt !== res.font_hun_fnt) {
+                                return false;
+                            }
 
-                        const cached = await decode(chineseCache.png);
+                            if (isNonNullish(res.font_hun_png) && chineseCache.custom_png !== res.font_hun_png) {
+                                return false;
+                            }
 
-                        resolvePng(cached);
+                            return chineseCache.chars === chars;
+                        };
 
-                        return new TextEncoder().encode(chineseCache.fnt);
+                        if (shouldUseCache()) {
+                            log("ingame", "返回缓存");
+
+                            const cached = await decode(chineseCache.png);
+
+                            resolvePng(cached);
+
+                            return new TextEncoder().encode(chineseCache.fnt);
+                        }
                     }
                 }
 
@@ -134,6 +148,8 @@ export const replacements = {
                     await storage.set({
                         [cacheStorageKey]: {
                             chars,
+                            custom_fnt: res.font_hun_fnt,
+                            custom_png: res.font_hun_png,
                             fnt: mergedFnt,
                             png: await encode(mergedPngBuffer),
                         },
