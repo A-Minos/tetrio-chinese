@@ -54,7 +54,7 @@ export const replacements = {
 
                     const chineseCache = res[cacheStorageKey];
 
-                    if (isNonNullish(chineseCache) && customNoChange) {
+                    if (isNonNullish(chineseCache)) {
                         const shouldUseCache = () => {
                             if (isNonNullish(res.font_hun_fnt) && chineseCache.custom_fnt !== res.font_hun_fnt) {
                                 return false;
