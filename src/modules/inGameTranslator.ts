@@ -57,7 +57,7 @@ export const replacements = {
 
                         resolvePng(cached);
 
-                        return chineseCache.fnt;
+                        return new TextEncoder().encode(chineseCache.fnt);
                     }
                 }
 
