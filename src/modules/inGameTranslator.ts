@@ -46,13 +46,9 @@ export const replacements = {
                     if (isNonNullish(chineseCache) && chineseCache.chars === chars) {
                         log("ingame", "返回缓存");
 
-                        resolvePng(
-                            URL.createObjectURL(
-                                new Blob([await decode(chineseCache.png)], {
-                                    type: "image/png",
-                                }),
-                            ),
-                        );
+                        const cached = await decode(chineseCache.png);
+
+                        resolvePng(cached);
 
                         return chineseCache.fnt;
                     }
@@ -103,9 +99,6 @@ export const replacements = {
                 const mergedFnt = merged.fnt_text.replace('file="HUN2.png"', 'file="hun.png"');
 
                 const mergedPngBuffer = new Uint8Array(merged.page_pngs[0]);
-                const mergedPng = new Blob([mergedPngBuffer], {
-                    type: "image/png",
-                });
 
                 if (isNonNullish(storage)) {
                     const encode = async (buffer) => {
@@ -124,10 +117,10 @@ export const replacements = {
                 }
 
                 if (isNonNullish(resolvePng)) {
-                    resolvePng(URL.createObjectURL(mergedPng));
+                    resolvePng(mergedPngBuffer);
                 }
 
-                return mergedFnt;
+                return new TextEncoder().encode(mergedFnt);
             },
             "res/font/hun.png": async () => {
                 return await png;
@@ -149,9 +142,11 @@ export const replacements = {
             ),
         );
 
-        return src.replace(
+        const raw = src.replace(
             /zenith.ns.zenithprompts(.*?)update\(e\){/gi,
             `zenith.ns.zenithprompts$1update(e) { const _replaceTexts = ${JSON.stringify(zenithPromptMap)}; e = e.map(item => { if (_replaceTexts[item.label] !== undefined) { item.label = _replaceTexts[item.label]; } return item; });`,
         );
+
+        return new TextEncoder().encode(raw);
     },
 };

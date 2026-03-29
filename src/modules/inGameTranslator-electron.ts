@@ -15,7 +15,7 @@ export default async () => {
             callback({
                 type: "font/fnt",
                 data: await processPlacement(replacements["res/font/hun.fnt"], [{ src, storage }]),
-                encoding: "base64-data-url",
+                encoding: "arraybuffer",
             });
         },
     });
@@ -29,7 +29,7 @@ export default async () => {
             callback({
                 type: "image/png",
                 data: await processPlacement(replacements["res/font/hun.png"], [{ src, storage }]),
-                encoding: "base64-data-url",
+                encoding: "arraybuffer",
             });
         },
     });
@@ -43,7 +43,7 @@ export default async () => {
             callback({
                 type: "text/javascript",
                 data: await processPlacement(replacements["/js/tetrio.js"], [{ src, storage }]),
-                encoding: "text",
+                encoding: "arraybuffer",
             });
         },
     });

@@ -59,13 +59,15 @@ export default async () => {
                     log("xhr:hooked", this, urlWithoutQuery, replacements[urlWithoutQuery], processed);
 
                     if (isNonNullish(processed)) {
+                        const decoded = new TextDecoder().decode(processed);
+
                         Object.defineProperty(this, "response", {
-                            value: processed,
+                            value: decoded,
                             writable: false,
                         });
 
                         Object.defineProperty(this, "responseText", {
-                            value: processed,
+                            value: decoded,
                             writable: false,
                         });
                     }
@@ -112,9 +114,13 @@ export default async () => {
                 if (isNonNullish(replacements[src])) {
                     const processed = await processPlacement(replacements[src], [{ storage }]);
 
+                    log("Image:hooked", src, processed, blob, url);
+
                     if (isNonNullish(processed)) {
-                        log("Image:hooked", src, processed);
-                        instance.setAttribute("src", processed);
+                        const blob = new Blob([processed]);
+                        const url = URL.createObjectURL(blob);
+
+                        instance.setAttribute("src", url);
                     }
                 }
             });
