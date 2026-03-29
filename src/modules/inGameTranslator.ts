@@ -69,8 +69,10 @@ export const replacements = {
 
                 log("ingame", "下载字体");
 
-                const fnt = await (await fetch("https://tetr.io/res/font/hun.fnt")).text();
-                const png = await (await fetch("https://tetr.io/res/font/hun.png")).bytes();
+                const res = isNonNullish(storage) ? await storage.get(["font_hun_fnt", "font_hun_png"]) : {};
+
+                const fnt = await (await fetch(res.font_hun_fnt ?? "https://tetr.io/res/font/hun.fnt")).text();
+                const png = await (await fetch(res.font_hun_png ?? "https://tetr.io/res/font/hun.png")).bytes();
 
                 log("ingame", "下载字体完成");
                 log("ingame", "导入字体");
