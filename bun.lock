@@ -4,7 +4,7 @@
   "workspaces": {
     "": {
       "devDependencies": {
-        "@a-minos/fontbake-wasm": "^0.2.1",
+        "@a-minos/fontbake-wasm": "^0.2.2",
         "@types/node": "^25.5.0",
         "husky": "^9.1.7",
         "oxfmt": "^0.42.0",
@@ -17,7 +17,7 @@
     },
   },
   "packages": {
-    "@a-minos/fontbake-wasm": ["@a-minos/fontbake-wasm@0.2.1", "https://npm.pkg.github.com/download/@a-minos/fontbake-wasm/0.2.1/51389fc9b36da8259c83729f5c26809f94dd683e", {}, "sha512-VI41lZ/UpBMQ7s/V7q2PrTQCGXufCTFBRnQatm5q3ZFQLHkjCgj1ocg+8quL4vWfBmmp3GBc5t63ngXNfH5cHg=="],
+    "@a-minos/fontbake-wasm": ["@a-minos/fontbake-wasm@0.2.2", "https://npm.pkg.github.com/download/@a-minos/fontbake-wasm/0.2.2/08070aa08caaff9a3bdbd0d2e452d24386a4868b", {}, "sha512-9PF8vvxgVCHOk5m+DVMaTcD+PfKTrQOqzmdT2tkPm1hjdFfFSNam3biJ+2tPeCCAUnW8Z8FTlD5LRB1XjI9c7w=="],
 
     "@emnapi/core": ["@emnapi/core@1.9.1", "", { "dependencies": { "@emnapi/wasi-threads": "1.2.0", "tslib": "^2.4.0" } }, "sha512-mukuNALVsoix/w1BJwFzwXBN/dHeejQtuVzcDsfOEsdpCumXb/E9j8w11h5S54tT1xhifGfbbSm/ICrObRb3KA=="],
 
