@@ -114,19 +114,8 @@ export const replacements = {
 
                 if (isNonNullish(storage)) {
                     const encode = async (blob) => {
-                        return await new Promise((resolve, reject) => {
-                            const reader = new FileReader();
-
-                            reader.onload = () => {
-                                resolve(reader.result);
-                            };
-
-                            reader.onerror = () => {
-                                reject();
-                            };
-
-                            reader.readAsDataURL(blob);
-                        });
+                        const buffer = Buffer.from(await blob.arrayBuffer());
+                        return "data:" + blob.type + ";base64," + buffer.toString("base64");
                     };
 
                     log("ingame", "写入缓存");
