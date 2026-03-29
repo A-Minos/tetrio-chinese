@@ -10,18 +10,13 @@ export const replacements = {
     ...(() => {
         const cacheStorageKey = "chineseCache";
 
-        let resolveReceivePng = null;
-        const receivePng = new Promise<string>((resolve) => {
-            resolveReceivePng = resolve;
-        });
-
         let resolvePng = null;
         const png = new Promise<string>((resolve) => {
             resolvePng = resolve;
         });
 
         return {
-            "res/font/hun.fnt": async ({ src, storage }) => {
+            "res/font/hun.fnt": async ({ storage }) => {
                 const chars = unique(
                     Object.values(
                         mergeAll(
@@ -71,23 +66,12 @@ export const replacements = {
 
                 await init();
 
-                let fnt;
-                let png;
+                log("ingame", "下载字体");
 
-                if (isNonNullish(src)) {
-                    log("ingame", "解析内置源");
+                const fnt = await (await fetch("https://tetr.io/res/font/hun.fnt")).text();
+                const png = await (await fetch("https://tetr.io/res/font/hun.png")).bytes();
 
-                    fnt = src;
-                    png = Buffer.from(await receivePng, "utf-8");
-                } else {
-                    log("ingame", "解析外置源");
-
-                    fnt = await (await fetch("https://tetr.io/res/font/hun.fnt")).text();
-                    png = await (await fetch("https://tetr.io/res/font/hun.png")).bytes();
-
-                    log("ingame", "解析外置源完成");
-                }
-
+                log("ingame", "下载字体完成");
                 log("ingame", "导入字体");
 
                 const imported = import_bmfont(fnt, JSON.stringify([[...png]]), "tetrio chinese");
@@ -162,11 +146,7 @@ export const replacements = {
 
                 return mergedFnt;
             },
-            "res/font/hun.png": async ({ src }) => {
-                if (isNonNullish(src)) {
-                    resolveReceivePng(src);
-                }
-
+            "res/font/hun.png": async () => {
                 return await png;
             },
         };

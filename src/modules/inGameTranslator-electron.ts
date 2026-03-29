@@ -11,7 +11,7 @@ export default async () => {
             let res = await storage.get(pluginStateStorageKey);
             return res[pluginStateStorageKey];
         },
-        onStop: async (storage, url, src, callback) => {
+        onStart: async (storage, url, src, callback) => {
             callback({
                 type: "font/fnt",
                 data: await processPlacement(replacements["res/font/hun.fnt"], [{ src, storage }]),
@@ -25,7 +25,7 @@ export default async () => {
             let res = await storage.get(pluginStateStorageKey);
             return res[pluginStateStorageKey];
         },
-        onStop: async (storage, url, src, callback) => {
+        onStart: async (storage, url, src, callback) => {
             callback({
                 type: "image/png",
                 data: await processPlacement(replacements["res/font/hun.png"], [{ src, storage }]),
