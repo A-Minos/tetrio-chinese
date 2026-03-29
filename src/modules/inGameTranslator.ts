@@ -4,6 +4,7 @@ import "@/patchs/URL";
 import { isNonNullish, isNullish, mergeAll, unique } from "remeda";
 import init, { build_font, import_bmfont, merge_fonts } from "@a-minos/fontbake-wasm";
 import font from "@/assets/zpix.ttf?url";
+import { log } from "@/utils/logging.ts";
 
 export const replacements = {
     ...(() => {
@@ -36,6 +37,8 @@ export const replacements = {
                         .join(""),
                 ).join("");
 
+                log("ingame", "字符集", chars);
+
                 if (isNonNullish(storage)) {
                     const res = await storage.get(cacheStorageKey);
 
@@ -58,6 +61,8 @@ export const replacements = {
                     const chineseCache = res[cacheStorageKey];
 
                     if (isNonNullish(chineseCache) && chineseCache.chars === chars) {
+                        log("ingame", "返回缓存");
+
                         resolvePng(URL.createObjectURL(decode(chineseCache.png)));
 
                         return chineseCache.fnt;
@@ -70,20 +75,36 @@ export const replacements = {
                 let png;
 
                 if (isNonNullish(src)) {
+                    log("ingame", "解析内置源");
+
                     fnt = src;
                     png = Buffer.from(await receivePng, "utf-8");
                 } else {
+                    log("ingame", "解析外置源");
+
                     fnt = await (await fetch("https://tetr.io/res/font/hun.fnt")).text();
                     png = await (await fetch("https://tetr.io/res/font/hun.png")).bytes();
+
+                    log("ingame", "解析外置源完成");
                 }
 
+                log("ingame", "导入字体");
+
                 const imported = import_bmfont(fnt, JSON.stringify([[...png]]), "tetrio chinese");
+
+                log("ingame", "导入字体完成");
+
+                log("ingame", "构建字体");
 
                 const build = build_font(
                     `font.name=HUN\nfont.size=52\nfont.bold=false\nfont.italic=false\nfont.gamma=1.8\nfont.mono=false\npad.top=4\npad.right=4\npad.bottom=4\npad.left=4\npad.advance.x=-8\npad.advance.y=-8\nglyph.native.rendering=false\nglyph.page.width=1024\nglyph.page.height=1024\nglyph.text=${chars}\nrender_type=0\neffect.class=com.badlogic.gdx.tools.hiero.unicodefont.effects.DistanceFieldEffect\neffect.Color=ffffff\neffect.Scale=32\neffect.Spread=3.5`,
                     [...(await (await fetch(font)).bytes())],
                     JSON.stringify([]),
                 );
+
+                log("ingame", "构建字体完成");
+
+                log("ingame", "合并字体");
 
                 const merged = merge_fonts(
                     JSON.stringify([JSON.parse(imported.glyphs_json), JSON.parse(build.glyphs_json)]),
@@ -98,6 +119,8 @@ export const replacements = {
                         spacing: [-8, -8],
                     }),
                 );
+
+                log("ingame", "合并字体完成");
 
                 const mergedFnt = merged.fnt_text.replace('file="HUN2.png"', 'file="hun.png"');
 
@@ -121,6 +144,8 @@ export const replacements = {
                             reader.readAsDataURL(blob);
                         });
                     };
+
+                    log("ingame", "写入缓存");
 
                     await storage.set({
                         [cacheStorageKey]: {
