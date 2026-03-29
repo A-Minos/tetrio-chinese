@@ -38,7 +38,14 @@ export const replacements = {
                     const res = await storage.get(cacheStorageKey);
 
                     const decode = async (data) => {
-                        return new Uint8Array(Buffer.from(data, "base64"));
+                        const binary = atob(data);
+                        const bytes = new Uint8Array(binary.length);
+
+                        for (let i = 0; i < binary.length; i++) {
+                            bytes[i] = binary.charCodeAt(i);
+                        }
+
+                        return bytes;
                     };
 
                     const chineseCache = res[cacheStorageKey];
@@ -102,7 +109,14 @@ export const replacements = {
 
                 if (isNonNullish(storage)) {
                     const encode = async (buffer) => {
-                        return Buffer.from(buffer).toString("base64");
+                        const chunkSize = 0x8000;
+
+                        let binary = "";
+                        for (let i = 0; i < buffer.length; i += chunkSize) {
+                            binary += String.fromCharCode(...buffer.subarray(i, i + chunkSize));
+                        }
+
+                        return btoa(binary);
                     };
 
                     log("ingame", "写入缓存");
