@@ -1,10 +1,9 @@
 // @ts-nocheck
 
+import "@/patchs/URL";
 import { isNonNullish, isNullish, mergeAll, unique } from "remeda";
 import init, { build_font, import_bmfont, merge_fonts } from "@a-minos/fontbake-wasm";
 import font from "@/assets/zpix.ttf?url";
-
-const _URL = URL;
 
 export const replacements = {
     ...(() => {
@@ -18,16 +17,6 @@ export const replacements = {
         let resolvePng = null;
         const png = new Promise<string>((resolve) => {
             resolvePng = resolve;
-        });
-
-        const URL = new Proxy(_URL, {
-            construct(target: any, argArray: any[], newTarget: Function): object {
-                if (argArray[1] === "undefined") {
-                    argArray[1] = undefined;
-                }
-
-                return Reflect.construct(target, argArray, newTarget);
-            },
         });
 
         return {

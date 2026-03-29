@@ -1,8 +1,9 @@
 import inGameTranslator from "@/modules/inGameTranslator-monkey";
 import translator from "@/modules/translator";
+import { unsafeWindow } from "$";
 
 (async () => {
-    window.addEventListener(
+    unsafeWindow.addEventListener(
         "load",
         async () => {
             await translator();
