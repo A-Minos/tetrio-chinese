@@ -37,20 +37,8 @@ export const replacements = {
                 if (isNonNullish(storage)) {
                     const res = await storage.get(cacheStorageKey);
 
-                    const decode = (base64) => {
-                        const [header, data] = base64.split(",");
-
-                        const mime = header.match(/:(.*?);/)[1];
-                        const binary = atob(data);
-                        const array = [];
-
-                        for (let i = 0; i < binary.length; i++) {
-                            array.push(binary.charCodeAt(i));
-                        }
-
-                        return new Blob([new Uint8Array(array)], {
-                            type: mime,
-                        });
+                    const decode = async (data) => {
+                        return new Uint8Array(Buffer.from(data, "base64"));
                     };
 
                     const chineseCache = res[cacheStorageKey];
@@ -58,7 +46,13 @@ export const replacements = {
                     if (isNonNullish(chineseCache) && chineseCache.chars === chars) {
                         log("ingame", "返回缓存");
 
-                        resolvePng(URL.createObjectURL(decode(chineseCache.png)));
+                        resolvePng(
+                            URL.createObjectURL(
+                                new Blob([await decode(chineseCache.png)], {
+                                    type: "image/png",
+                                }),
+                            ),
+                        );
 
                         return chineseCache.fnt;
                     }
@@ -108,14 +102,14 @@ export const replacements = {
 
                 const mergedFnt = merged.fnt_text.replace('file="HUN2.png"', 'file="hun.png"');
 
-                const mergedPng = new Blob([new Uint8Array(merged.page_pngs[0])], {
+                const mergedPngBuffer = new Uint8Array(merged.page_pngs[0]);
+                const mergedPng = new Blob([mergedPngBuffer], {
                     type: "image/png",
                 });
 
                 if (isNonNullish(storage)) {
-                    const encode = async (blob) => {
-                        const buffer = Buffer.from(await blob.arrayBuffer());
-                        return "data:" + blob.type + ";base64," + buffer.toString("base64");
+                    const encode = async (buffer) => {
+                        return Buffer.from(buffer).toString("base64");
                     };
 
                     log("ingame", "写入缓存");
@@ -124,7 +118,7 @@ export const replacements = {
                         [cacheStorageKey]: {
                             chars,
                             fnt: mergedFnt,
-                            png: await encode(mergedPng),
+                            png: await encode(mergedPngBuffer),
                         },
                     });
                 }
