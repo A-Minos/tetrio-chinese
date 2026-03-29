@@ -38,6 +38,10 @@ export const replacements = {
                     const res = await storage.get(cacheStorageKey);
 
                     const decode = async (data) => {
+                        if (isNonNullish(Buffer)) {
+                            return new Uint8Array(Buffer.from(data, "base64"));
+                        }
+
                         const binary = atob(data);
                         const bytes = new Uint8Array(binary.length);
 
@@ -109,6 +113,10 @@ export const replacements = {
 
                 if (isNonNullish(storage)) {
                     const encode = async (buffer) => {
+                        if (isNonNullish(Buffer)) {
+                            return Buffer.from(buffer).toString("base64");
+                        }
+
                         const chunkSize = 0x8000;
 
                         let binary = "";
