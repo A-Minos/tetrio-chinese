@@ -114,7 +114,7 @@ export default async () => {
                 if (isNonNullish(replacements[src])) {
                     const processed = await processPlacement(replacements[src], [{ storage }]);
 
-                    log("Image:hooked", src, processed, blob, url);
+                    log("Image:hooked", src, processed);
 
                     if (isNonNullish(processed)) {
                         const blob = new Blob([processed]);
