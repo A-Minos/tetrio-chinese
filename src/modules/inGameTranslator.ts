@@ -38,7 +38,7 @@ export const replacements = {
                     const res = await storage.get(cacheStorageKey);
 
                     const decode = async (data) => {
-                        if (isNonNullish(Buffer)) {
+                        if (typeof Buffer !== "undefined") {
                             return new Uint8Array(Buffer.from(data, "base64"));
                         }
 
@@ -115,7 +115,7 @@ export const replacements = {
 
                 if (isNonNullish(storage)) {
                     const encode = async (buffer) => {
-                        if (isNonNullish(Buffer)) {
+                        if (typeof Buffer !== "undefined") {
                             return Buffer.from(buffer).toString("base64");
                         }
 
