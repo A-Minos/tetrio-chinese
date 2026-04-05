@@ -12,14 +12,14 @@
         "prepare": "husky"
     },
     "devDependencies": {
-        "@a-minos/fontbake-wasm": "^0.2.2",
-        "@types/node": "^25.5.0",
+        "@a-minos/fontbake-wasm": "^0.2.3",
+        "@types/node": "^25.5.2",
         "husky": "^9.1.7",
-        "oxfmt": "^0.42.0",
-        "oxlint": "^1.57.0",
-        "remeda": "^2.33.6",
-        "typescript": "~5.9.3",
-        "vite": "^8.0.1",
+        "oxfmt": "^0.43.0",
+        "oxlint": "^1.58.0",
+        "remeda": "^2.33.7",
+        "typescript": "~6.0.2",
+        "vite": "^8.0.3",
         "vite-plugin-monkey": "^7.1.9"
     }
 }
